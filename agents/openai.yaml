@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ardot HTML 原型转换器"
+  short_description: "将 HTML 原型转换为可编辑 Ardot 文件"
+  default_prompt: "使用 $ardot-html-prototype-converter 将 Axure HTML 原型转换为可编辑的 Ardot 原型。"
