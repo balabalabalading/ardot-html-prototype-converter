@@ -111,12 +111,44 @@
 表现：
 
 - 大范围 `batch_read` 导致上下文爆炸。
+- 宽泛 `rg` 或全量读取把压缩 `document.js`、大段 DOM/HTML 输出进上下文。
 - 每个表格列都完整回读。
+- 反复全量读取组件库，只为确认少量组件 ID。
 - `componentProperties` 更新产生大量 potential issue 输出。
 
 修复：
 
+- 先生成 compact manifest 和 render summary，只输出目标页面摘要。
 - 只读取当前判断需要的节点和属性。
 - 优先浅层读取。
+- 组件库全量读取后立即整理最小组件映射，后续引用映射。
 - 先探查一个 table column 的文本路径，再复用已确认模式。
 - 优先复制正确组件变体，再更新实例内部可见文本。
+
+## Ardot 组件展开过量
+
+表现：
+
+- `fetch_component_lib` 的完整组件集反复进入上下文。
+- `batch_read(resolveInstances=true)` 展开完整 table column 子树，产生大量重复行结构。
+- 为每一列重复探查表头、单元格路径。
+
+修复：
+
+- 组件库只全量读取一次，并记录最小组件映射。
+- table column 只深读一个代表实例，记录 header 和 cell 文本路径。
+- 后续批量生成只使用已确认路径和表格列数据 JSON。
+
+## 表格默认占位行泄漏
+
+表现：
+
+- Ardot 截图中出现「项目名称」等 table column 组件默认占位文本。
+- 只覆写了前几行数据，但 Table 可见区域露出了未覆写的默认行。
+
+修复：
+
+- 补齐所有可见行的真实样例数据。
+- 确认 `Table.clipsContent=true`，避免默认行溢出可见。
+- 按列表页规范调整 Table 可见高度；紧凑后台列表页仍优先遵守 `276` 的默认高度规则。
+- 重新截图或在 manifest 中明确记录截图不是最终状态。

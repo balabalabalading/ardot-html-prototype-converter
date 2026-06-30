@@ -26,6 +26,8 @@
 
 必须使用完整路径判断页面层级。不要只根据平铺页面名推断页面所属菜单。
 
+先输出目标范围的 compact manifest，再按需深挖单页。不要把整段压缩 `data/document.js`、全量 HTML 或宽泛搜索结果直接灌入上下文。compact manifest 只保留本批需要的 `pageId`、`pageName`、URL/HTML 路径、完整菜单 path、页面类型和少量状态判断。
+
 ## 3. 选择小批量范围
 
 不要一次转换完整系统。先选择一个模块或一类页面。每个页面在系统 manifest 中记录：
@@ -64,6 +66,8 @@
 - existing sidepanel components
 
 确认本地组件库中存在按钮、输入框、选择器、分页、表格列以及当前页面所需控件。组件 ID 是文件内局部有效的，不要跨 Ardot 文件复用未验证的 ID。
+
+读取组件库后，立即整理最小组件映射，例如 `sidePanel`、`Button`、`Input`、`Select`、`DatePicker`、`Pagination`、`table column`。后续操作引用这份映射，不要为了单个组件反复全量展开组件库。
 
 ## 6. 先做一个样板页
 
